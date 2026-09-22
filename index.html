@@ -16,7 +16,7 @@
             
             // روابط الاستمارة الخاصة بك (تأكد من تعديلها)
             const jotformURL = "https://form.jotform.com/262636640680056"; 
-            const uniqueFieldName = "{{beneficiary_telegram_id}}"; 
+            const uniqueFieldName = "beneficiary_telegram_id"; 
 
             let userId = "No_ID";
 
@@ -31,6 +31,7 @@
 
             // توجيه المستخدم فوراً إلى Jotform مع تمرير الـ ID
             window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
+            const uniqueFieldName = "الكلمة_التي_نسختها_من_جوت_فورم"; 
         });
     </script>
 </body>
