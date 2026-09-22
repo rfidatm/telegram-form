@@ -1,67 +1,36 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jotform Telegram Bridge</title>
-    <!-- استدعاء المكتبة الرسمية -->
+    <title>Loading...</title>
+    <!-- تضمين مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org"></script>
 </head>
-<body style="background-color: #ffffff; font-family: Arial, sans-serif; text-align: center; padding-top: 60px;">
-
-    <h3 id="status">جاري تأمين الاتصال بالاستمارة...</h3>
+<body>
+    <h3 style="text-align: center; margin-top: 50px; font-family: sans-serif;">جاري تحميل الاستمارة...</h3>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // إعداد الروابط (تأكد من تعديلها لبياناتك)
+            const tg = window.Telegram?.WebApp;
+            
+            // روابط الاستمارة الخاصة بك (تأكد من تعديلها)
             const jotformURL = "https://form.jotform.com/262636640680056"; 
             const uniqueFieldName = "beneficiary_telegram_id"; 
 
             let userId = "No_ID";
 
-            // 1. محاولة التقاط الـ ID داخل بيئة تليجرام أولاً قبل أي تحويل
-            try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-
-                    // قراءة البيانات المباشرة
-                    if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-                        userId = tg.initDataUnsafe.user.id;
-                    } 
-                    // محاولة بديلة إذا كانت البيانات مشفرة بسجلات تليجرام
-                    else if (tg.initData) {
-                        const searchParams = new URLSearchParams(tg.initData);
-                        const userRaw = searchParams.get('user');
-                        if (userRaw) {
-                            const userObj = JSON.parse(userRaw);
-                            if (userObj && userObj.id) userId = userObj.id;
-                        }
-                    }
+            if (tg) {
+                tg.ready();
+                tg.expand(); // فتح الشاشة بالكامل داخل تليجرام
+                // محاولة جلب الـ ID من تليجرام
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    userId = tg.initDataUnsafe.user.id;
                 }
-            } catch (e) {
-                console.error("Error capturing ID:", e);
             }
 
-            // 2. دمج الـ ID المقطوع داخل رابط التوجيه النهائي لضمان عدم ضياعه
-            const finalRedirectURL = `${jotformURL}?${uniqueFieldName}=${userId}`;
-
-            // 3. التوجيه الخارجي الآمن للهواتف لتفادي حظر جوجل وسحب الـ ID معاً
-            try {
-                if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
-                    document.getElementById('status').innerText = "جاري فتح الاستمارة في المتصفح الآمن...";
-                    window.Telegram.WebApp.openLink(finalRedirectURL);
-                    
-                    // إغلاق نافذة التليجرام المصغرة بعد نجاح فتح المتصفح الخارجي
-                    setTimeout(() => { window.Telegram.WebApp.close(); }, 800);
-                } else {
-                    // تحويل احتياطي للكمبيوتر والمتصفحات العادية
-                    window.location.href = finalRedirectURL;
-                }
-            } catch (err) {
-                window.location.href = finalRedirectURL;
-            }
+            // توجيه المستخدم فوراً إلى Jotform مع تمرير الـ ID
+            window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
         });
     </script>
 </body>
