@@ -1,37 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
-    <!-- تضمين مكتبة تليجرام الرسمية -->
+    <title>Jotform Bridge</title>
+    <!-- استدعاء مكتبة تليجرام -->
     <script src="https://telegram.org"></script>
 </head>
-<body>
-    <h3 style="text-align: center; margin-top: 50px; font-family: sans-serif;">جاري تحميل الاستمارة...</h3>
+<body style="background-color: #ffffff; font-family: Arial, sans-serif; text-align: center; padding-top: 40px;">
+
+    <h3>جاري فتح الاستمارة...</h3>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tg = window.Telegram?.WebApp;
-            
-            // روابط الاستمارة الخاصة بك (تأكد من تعديلها)
+        (function() {
+            // الإعدادات الخاصة بك - يرجى وضع الرابط بدقة
             const jotformURL = "https://form.jotform.com/262636640680056"; 
             const uniqueFieldName = "beneficiary_telegram_id"; 
 
             let userId = "No_ID";
 
-            if (tg) {
-                tg.ready();
-                tg.expand(); // فتح الشاشة بالكامل داخل تليجرام
-                // محاولة جلب الـ ID من تليجرام
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    userId = tg.initDataUnsafe.user.id;
+            try {
+                // محاولة سحب معرف تليجرام فوراً
+                if (window.Telegram && window.Telegram.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                        userId = tg.initDataUnsafe.user.id;
+                    }
                 }
+            } catch (e) {
+                console.log("Telegram template pull bypass");
             }
 
-            // توجيه المستخدم فوراً إلى Jotform مع تمرير الـ ID
-            window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
-        });
+            // الانتقال الفوري والمباشر بدون أي تأخير وبدون تعليق صفحة
+            window.location.href = jotformURL + "?" + uniqueFieldName + "=" + userId;
+        })();
     </script>
 </body>
 </html>
