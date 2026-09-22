@@ -3,40 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jotform Bridge</title>
-    <!-- استدعاء مكتبة تليجرام -->
+    <title>Jotform Telegram Connector</title>
+    <!-- استدعاء أحدث نسخة من مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org"></script>
 </head>
-<body style="background-color: #ffffff; font-family: Arial, sans-serif; text-align: center; padding-top: 40px;">
+<body style="background-color: #ffffff; font-family: Arial, sans-serif; text-align: center; padding-top: 50px;">
 
-    <h3>جاري فتح الاستمارة...</h3>
+    <h3>جاري التحقق وتوجيهك للاستمارة...</h3>
 
     <script>
-        (function() {
-            // الإعدادات الخاصة بك - يرجى وضع الرابط بدقة
-            const jotformURL = "https://form.jotform.com/262636640680056"; 
-            const uniqueFieldName = "beneficiary_telegram_id"; 
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram?.WebApp;
+            
+            // روابط الإعدادات الخاصة بك
+            const jotformURL = "https://form.jotform.com/262636640680056"; // ضع رابط الفورم هنا
+            const uniqueFieldName = "beneficiary_telegram_id"; // اسم الحقل الفريد في Jotform
 
             let userId = "No_ID";
 
-            try {
-                // محاولة سحب معرف تليجرام فوراً
-                if (window.Telegram && window.Telegram.WebApp) {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-                    
-                    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                        userId = tg.initDataUnsafe.user.id;
+            if (tg) {
+                tg.ready();
+                tg.expand();
+
+                // محاولة جلب المعرف بالطريقة الأساسية
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                    userId = tg.initDataUnsafe.user.id;
+                } 
+                // محاولة بديلة متطورة إذا كانت البيانات مشفرة داخل الرابط
+                else if (tg.initData) {
+                    try {
+                        const searchParams = new URLSearchParams(tg.initData);
+                        const userRaw = searchParams.get('user');
+                        if (userRaw) {
+                            const userObj = JSON.parse(userRaw);
+                            if (userObj && userObj.id) {
+                                userId = userObj.id;
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Error parsing initData", e);
                     }
                 }
-            } catch (e) {
-                console.log("Telegram template pull bypass");
             }
 
-            // الانتقال الفوري والمباشر بدون أي تأخير وبدون تعليق صفحة
-            window.location.href = jotformURL + "?" + uniqueFieldName + "=" + userId;
-        })();
+            // الانتقال الفوري وتمرير البيانات المحدثة
+            window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
+        });
     </script>
 </body>
 </html>
