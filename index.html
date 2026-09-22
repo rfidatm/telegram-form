@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Form...</title>
+    <!-- Include the Telegram WebApp Script -->
+    <script src="https://telegram.org"></script>
+</head>
+<body>
+    <script>
+        // Wait for Telegram to be ready
+        window.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            tg.expand(); // Make the form open full screen
+
+            // Get the User ID safely from Telegram
+            const userId = tg.initDataUnsafe?.user?.id || "No_ID_Found";
+
+            // YOUR CONFIGURATION:
+            const jotformURL = "https://app.jotform.com/262637384004557"; // Replace with your Jotform link
+            const uniqueFieldName = "beneficiary_telegram_id"; // Replace with your Jotform field's Unique Name
+
+            // Redirect the user to the form with their ID pre-filled
+            window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
+        });
+    </script>
+</body>
+</html>
