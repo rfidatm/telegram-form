@@ -3,26 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Form...</title>
-    <!-- Include the Telegram WebApp Script -->
+    <title>Loading...</title>
+    <!-- تضمين مكتبة تليجرام الرسمية -->
     <script src="https://telegram.org"></script>
 </head>
 <body>
+    <h3 style="text-align: center; margin-top: 50px; font-family: sans-serif;">جاري تحميل الاستمارة...</h3>
+
     <script>
-        // Wait for Telegram to be ready
-        window.addEventListener('DOMContentLoaded', () => {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand(); // Make the form open full screen
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram?.WebApp;
+            
+            // روابط الاستمارة الخاصة بك (تأكد من تعديلها)
+            const jotformURL = "https://app.jotform.com/262637384004557"; 
+            const uniqueFieldName = "beneficiary_telegram_id"; 
 
-            // Get the User ID safely from Telegram
-            const userId = tg.initDataUnsafe?.user?.id || "No_ID_Found";
+            let userId = "No_ID";
 
-            // YOUR CONFIGURATION:
-            const jotformURL = "https://app.jotform.com/262637384004557"; // Replace with your Jotform link
-            const uniqueFieldName = "beneficiary_telegram_id"; // Replace with your Jotform field's Unique Name
+            if (tg) {
+                tg.ready();
+                tg.expand(); // فتح الشاشة بالكامل داخل تليجرام
+                // محاولة جلب الـ ID من تليجرام
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    userId = tg.initDataUnsafe.user.id;
+                }
+            }
 
-            // Redirect the user to the form with their ID pre-filled
+            // توجيه المستخدم فوراً إلى Jotform مع تمرير الـ ID
             window.location.href = `${jotformURL}?${uniqueFieldName}=${userId}`;
         });
     </script>
