@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jotform Telegram Bridge</title>
+    <title>youform Telegram Bridge</title>
     <!-- استدعاء المكتبة الرسمية -->
     <script src="https://telegram.org"></script>
 </head>
@@ -45,7 +45,7 @@
             }
 
             // 2. دمج الـ ID المقطوع داخل رابط التوجيه النهائي لضمان عدم ضياعه
-            const finalRedirectURL = `${jotformURL}?${uniqueFieldName}=${userId}`;
+            const finalRedirectURL = `${youformURL}?${uniqueFieldName}=${userId}`;
 
             // 3. التوجيه الخارجي الآمن للهواتف لتفادي حظر جوجل وسحب الـ ID معاً
             try {
